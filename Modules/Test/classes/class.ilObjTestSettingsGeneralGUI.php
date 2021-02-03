@@ -764,9 +764,15 @@ class ilObjTestSettingsGeneralGUI extends ilTestSettingsGUI
         $introEnabled = new ilCheckboxInputGUI($this->lng->txt("tst_introduction"), 'intro_enabled');
         $introEnabled->setChecked($this->testOBJ->isIntroductionEnabled());
         $introEnabled->setInfo($this->lng->txt('tst_introduction_desc'));
+        // thkoeln-patch: begin
+        $introEnabled->setDisabled($this->testOBJ->participantDataExist());
+        // thkoeln-patch: end
         $form->addItem($introEnabled);
         $intro = new ilTextAreaInputGUI($this->lng->txt("tst_introduction_text"), "introduction");
-        $intro->setRequired(true);
+        // thkoeln-patch: begin
+        $intro->setRequired(!$this->testOBJ->participantDataExist());
+        $intro->setDisabled($this->testOBJ->participantDataExist());
+        // thkoeln-patch: end
         $intro->setValue($this->testOBJ->prepareTextareaOutput($this->testOBJ->getIntroduction(), false, true));
         $intro->setRows(10);
         $intro->setCols(80);
@@ -790,7 +796,8 @@ class ilObjTestSettingsGeneralGUI extends ilTestSettingsGUI
      */
     private function saveTestIntroProperties(ilPropertyFormGUI $form)
     {
-        if ($form->getItemByPostVar('intro_enabled') instanceof ilFormPropertyGUI) {
+        // thkoeln-patch: begin
+        if ($form->getItemByPostVar('intro_enabled') instanceof ilFormPropertyGUI && !$this->testOBJ->participantDataExist()) {
             $this->testOBJ->setIntroductionEnabled($form->getItemByPostVar('intro_enabled')->getChecked());
 
             if ($form->getItemByPostVar('intro_enabled')->getChecked()) {
@@ -799,6 +806,7 @@ class ilObjTestSettingsGeneralGUI extends ilTestSettingsGUI
                 $this->testOBJ->setIntroduction('');
             }
         }
+        // thkoeln-patch: end
 
         if ($form->getItemByPostVar('showinfo') instanceof ilFormPropertyGUI) {
             $this->testOBJ->setShowInfo($form->getItemByPostVar('showinfo')->getChecked());
@@ -1469,10 +1477,16 @@ class ilObjTestSettingsGeneralGUI extends ilTestSettingsGUI
         $showfinal = new ilCheckboxInputGUI($this->lng->txt("final_statement"), "showfinalstatement");
         $showfinal->setChecked($this->testOBJ->getShowFinalStatement());
         $showfinal->setInfo($this->lng->txt("final_statement_show_desc"));
+        // thkoeln-patch: begin
+        $showfinal->setDisabled($this->testOBJ->participantDataExist());
+        // thkoeln-patch: end
         $form->addItem($showfinal);
         // final statement
         $finalstatement = new ilTextAreaInputGUI($this->lng->txt("final_statement"), "finalstatement");
-        $finalstatement->setRequired(true);
+        // thkoeln-patch: begin
+        $finalstatement->setRequired(!$this->testOBJ->participantDataExist());
+        $finalstatement->setDisabled($this->testOBJ->participantDataExist());
+        // thkoeln-patch: end
         $finalstatement->setValue($this->testOBJ->prepareTextareaOutput($this->testOBJ->getFinalStatement(), false, true));
         $finalstatement->setRows(10);
         $finalstatement->setCols(80);
@@ -1538,8 +1552,12 @@ class ilObjTestSettingsGeneralGUI extends ilTestSettingsGUI
             $this->testOBJ->setShowExamviewPdf($form->getItemByPostVar('show_examview_pdf')->getChecked());
         }
 
-        $this->testOBJ->setShowFinalStatement($form->getItemByPostVar('showfinalstatement')->getChecked());
-        $this->testOBJ->setFinalStatement($form->getItemByPostVar('finalstatement')->getValue(), false, ilObjAdvancedEditing::_getUsedHTMLTagsAsString("assessment"));
+        // thkoeln-patch: begin
+        if (!$this->testOBJ->participantDataExist()) {
+            $this->testOBJ->setShowFinalStatement($form->getItemByPostVar('showfinalstatement')->getChecked());
+            $this->testOBJ->setFinalStatement($form->getItemByPostVar('finalstatement')->getValue(), false, ilObjAdvancedEditing::_getUsedHTMLTagsAsString("assessment"));
+        }
+        // thkoeln-patch: end
 
         if ($form->getItemByPostVar('redirection_enabled')->getChecked()) {
             $this->testOBJ->setRedirectionMode($form->getItemByPostVar('redirection_mode')->getValue());
