@@ -327,7 +327,7 @@ abstract class ilTestExport
      *
      * @return string
      */
-    public function exportToExcel($deliver = true, $filterby = "", $filtertext = "", $passedonly = false)
+    public function exportToExcel($deliver = true, $filterby = "", $filtertext = "", $passedonly = false, $data = false)
     {
         $this->test_obj->setAccessFilteredParticipantList($this->getAccessFilteredParticipantList());
         
@@ -388,7 +388,9 @@ abstract class ilTestExport
         $worksheet->setBold('A' . $row . ':' . $worksheet->getColumnCoord($col - 1) . $row);
 
         $counter = 1;
-        $data = $this->test_obj->getCompleteEvaluationData(true, $filterby, $filtertext);
+        if($data === false) {
+            $data = $this->test_obj->getCompleteEvaluationData(true, $filterby, $filtertext);
+        }
         $firstrowwritten = false;
         foreach ($data->getParticipants() as $active_id => $userdata) {
             if ($passedonly && $data->getParticipant($active_id)->getPassed() == false) {

@@ -376,6 +376,9 @@ assessment#:#autosave#:#Automatic saving
 assessment#:#autosave_info#:#Answers are automatically saved in specified intervals to avoid data loss.
 assessment#:#autosave_ival#:#Interval
 assessment#:#for#:#for
+assessment#:#illegal_value#:#Illegal selection
+assessment#:#no_users_selected#:#No users selected
+assessment#:#expor_results_excel#:#Exportieren als Excel
 assessment#:#tst_presentation_settings_section#:#Presentation
 assessment#:#wait_for_next_pass_hint_msg#:#Additional pass is possible on time: %s
 assessment#:#tst_pass_waiting_enabled#:#Force Waiting Time between Passes
