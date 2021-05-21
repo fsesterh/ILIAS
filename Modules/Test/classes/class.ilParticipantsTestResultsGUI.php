@@ -373,12 +373,7 @@ class ilParticipantsTestResultsGUI
         $user_ids = [];
         if(isset($_POST['chbUser']) && is_array($_POST['chbUser'])){
             foreach($_POST['chbUser'] as $user_id) {
-                if(is_int($user_id)) {
-                    $user_ids[]= $user_id;
-                } else {
-                    ilUtil::sendFailure('illegal_value');
-                    $DIC->ctrl()->redirect($this, self::CMD_SHOW_PARTICIPANTS);
-                }
+                $user_ids[]= (int)$user_id;
             }
         }
         if(count($user_ids) === 0) {
