@@ -369,11 +369,14 @@ class ilParticipantsTestResultsGUI
         require_once 'Modules/Test/classes/class.ilTestExportFactory.php';
         $expFactory = new ilTestExportFactory($this->getTestObj());
 
+        $testParticipantData = new ilTestParticipantData($DIC->database(), $DIC->language());
+        $testParticipantData->load($this->getTestObj()->getTestId());
+
         // Setting external data for export based on selected participants
         $user_ids = [];
         if(isset($_POST['chbUser']) && is_array($_POST['chbUser'])){
-            foreach($_POST['chbUser'] as $user_id) {
-                $user_ids[]= (int)$user_id;
+            foreach($_POST['chbUser'] as $active_id) {
+                $user_ids[]= $testParticipantData->getUserIdByActiveId($active_id);
             }
         }
         if(count($user_ids) === 0) {

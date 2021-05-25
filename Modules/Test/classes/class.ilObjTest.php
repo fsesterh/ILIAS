@@ -5176,7 +5176,7 @@ class ilObjTest extends ilObject implements ilMarkSchemaAware, ilEctsGradesEnabl
         include_once "./Modules/Test/classes/class.ilTestEvaluationData.php";
         include_once "./Modules/Test/classes/class.ilTestEvaluationPassData.php";
         include_once "./Modules/Test/classes/class.ilTestEvaluationUserData.php";
-        $data = $this->getUnfilteredEvaluationData();
+        $data = $this->getUnfilteredEvaluationData($user_ids);
         if ($withStatistics) {
             $data->calculateStatistics();
         }
