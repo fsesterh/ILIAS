@@ -359,7 +359,33 @@ class ilParticipantsTestResultsGUI
         }
         $this->showUserResults($show_pass_details = false, $show_answers = true);
     }
-    
+
+    /**
+     * Exports the evaluation data of selected users to excel
+     */
+    public function exportResultsCmd()
+    {
+        global $DIC;
+        require_once 'Modules/Test/classes/class.ilTestExportFactory.php';
+        $expFactory = new ilTestExportFactory($this->getTestObj());
+
+        $testParticipantData = new ilTestParticipantData($DIC->database(), $DIC->language());
+        $testParticipantData->load($this->getTestObj()->getTestId());
+
+        // Setting external data for export based on selected participants
+        $user_ids = [];
+        if(isset($_POST['chbUser']) && is_array($_POST['chbUser'])){
+            foreach($_POST['chbUser'] as $active_id) {
+                $user_ids[]= $testParticipantData->getUserIdByActiveId($active_id);
+            }
+        }
+        if(count($user_ids) === 0) {
+            ilUtil::sendFailure('no_users_selected');
+        }
+        $data = $this->getTestObj()->getCompleteEvaluationData(true, '', '', $user_ids);
+        $expFactory->getExporter('results')->exportToExcel(true,'', '',false, $data);
+    }
+
     /**
      * Shows the pass overview of the scored pass for one ore more users
      */

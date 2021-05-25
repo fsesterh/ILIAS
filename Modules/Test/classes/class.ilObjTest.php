@@ -4827,7 +4827,7 @@ class ilObjTest extends ilObject implements ilMarkSchemaAware, ilEctsGradesEnabl
         return $list;
     }
     
-    public function getUnfilteredEvaluationData()
+    public function getUnfilteredEvaluationData($user_ids = [])
     {
         /** @var $DIC ILIAS\DI\Container */
         global $DIC;
@@ -4870,6 +4870,10 @@ class ilObjTest extends ilObject implements ilMarkSchemaAware, ilEctsGradesEnabl
             $participantObject = $data->getParticipant($row["active_fi"]);
 
             if (!($participantObject instanceof ilTestEvaluationUserData)) {
+                continue;
+            }
+
+            if($user_ids != [] && !in_array($participantObject->getUserID(), $user_ids, true)) {
                 continue;
             }
 
@@ -5167,12 +5171,12 @@ class ilObjTest extends ilObject implements ilMarkSchemaAware, ilEctsGradesEnabl
         return array("count" => 0, "points" => 0);
     }
 
-    public function &getCompleteEvaluationData($withStatistics = true, $filterby = "", $filtertext = "")
+    public function &getCompleteEvaluationData($withStatistics = true, $filterby = "", $filtertext = "", $user_ids = [])
     {
         include_once "./Modules/Test/classes/class.ilTestEvaluationData.php";
         include_once "./Modules/Test/classes/class.ilTestEvaluationPassData.php";
         include_once "./Modules/Test/classes/class.ilTestEvaluationUserData.php";
-        $data = $this->getUnfilteredEvaluationData();
+        $data = $this->getUnfilteredEvaluationData($user_ids);
         if ($withStatistics) {
             $data->calculateStatistics();
         }

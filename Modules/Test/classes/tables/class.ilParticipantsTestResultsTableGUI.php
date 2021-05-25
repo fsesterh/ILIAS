@@ -145,6 +145,7 @@ class ilParticipantsTestResultsTableGUI extends ilTable2GUI
             $this->addMultiCommand('showPassOverview', $this->lng->txt('show_pass_overview'));
             $this->addMultiCommand('showUserAnswers', $this->lng->txt('show_user_answers'));
             $this->addMultiCommand('showDetailedResults', $this->lng->txt('show_detailed_results'));
+            $this->addMultiCommand('exportResults', $this->lng->txt('export_results_excel'));
         }
         
         if ($this->isManageResultsCommandsEnabled()) {
